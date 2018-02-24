@@ -7,7 +7,9 @@ Customer is the API as defined for the Customer Microservice that is used for th
 
 ## Profile [/profile]
 
+The profile consists of a number of parts: Customer, Address, Phonenumber, Payment details and Preferences
 ### Signup [POST]
+Sign up as a new customer
 
 + Request (application/json)
     
@@ -22,6 +24,7 @@ Customer is the API as defined for the Customer Microservice that is used for th
             }
             
 ### Edit profile [PUT]
+Update to an existing profile
 
 + Request (application/json)
     
@@ -62,24 +65,32 @@ Get service health information
 - uptime: `1234.1` (number) - The uptime of the service in minutes
 
 ## User
-- username: "john.doe@gmail.com" (string, required)
+- username: "john.doe@gmail.com" (string, required) - email address is used for username
 - password: '1232323' (string, required)
 
 ## Customer
 
 - first_name: `John` (string, required)
 - last_name: `Doe` (string, required)
-- username: 'John.doe@gmail.com' (string, required)
+- title (enum, required)
+    - 'Mr' (string) - Mister
+    - 'Mrs' (string) - Mrs
+    - 'Ms' (string) - Ms
+    - 'Miss" (string) - Miss
+- email: 'John.doe@gmail.com' (string, required)
 - dateOfBirth: '1980-02-24' (date, required)
 - _id: `12345678908754324567854345675432` (string, optional) - Technical database ID
-- phonenumber (array[PhoneNumber])
-- address (array[Address])
+- phonenumber (array[PhoneNumber], optional)
+- address (array[Address], required)
+- paymentDetails (array[PaymentType], optional)
+- preferences (array[Preference], optional)
 
 ## Address (object)
 - type (enum, required)
   - `BILLING` (string) - Billing address
   - `DELIVERY` (string) - Delivery
-- streetAdress: `21 2nd Street` (string, required)
+- streetname: `2nd Street` (string, required)
+- street number: '21' (string, required)
 - city: `New York` (string, required)
 - postcode:  `50858` (string, required)
 - country:  `US` (string, required)
@@ -91,3 +102,16 @@ Get service health information
     - 'MOBILE' (string) - mobile phone number
 - countryCode: 31 (number, required)
 - number: 1234567890 (number, required)
+- id" '1272837937' (string, optional) - Technical database ID
+
+## PaymentType (object)
+- type (enum, required)
+    - 'CREDIT' (string) - credit card payments
+    - 'DEBIT' (string) - paypall
+- cardNumber: 1234341413231 (string, required)
+- expirationDate: 09/22 (string, optional)
+- nameOnCard: 'Doe' (string, required)
+
+## Preference (object)
+- newsLetter (boolean, required)- indication if the customer wants to receive a newsletter
+- offers (boolean, required) - indicatio if te customer wants to receive offers
