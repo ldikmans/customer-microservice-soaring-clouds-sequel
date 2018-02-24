@@ -1,0 +1,93 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/customer
+
+# Customer
+
+Customer is the API as defined for the Customer Microservice that is used for the soaring through the clouds demo sequel.
+
+## Profile [/profile]
+
+### Signup [POST]
+
++ Request (application/json)
+    
+    + Attributes (Customer)
+    
++ Response 201 (application/json)
+    
+    + Body
+        
+            {
+                "message":"your account has been created, please check your email for account verification"
+            }
+            
+### Edit profile [PUT]
+
++ Request (application/json)
+    
+    + Body 
+        
+    + Attributes (Customer)
+    
++ Response 204 (application/json)
+
+## Identiy [/signin]
+
+### Signin [POST]
+
++ Request 
+
+    + Attributes (User)
+
++ Response 204
+
++ Response 401
+
+## Health Check [/api/health]
+
+### Get service health state [GET]
+Get service health information
+
++ Response 200 (application/json)
+
+    + Attributes (Health Check Response)
+
+# Data structures
+
+## Health Check Response
+- version: `0.1` (number, optional)
+- status (enum, required)
+  - `OK` (string) - Everything fine with the service
+  - `FAILED` (string) - Something is wrong with the service
+- uptime: `1234.1` (number) - The uptime of the service in minutes
+
+## User
+- username: "john.doe@gmail.com" (string, required)
+- password: '1232323' (string, required)
+
+## Customer
+
+- first_name: `John` (string, required)
+- last_name: `Doe` (string, required)
+- username: 'John.doe@gmail.com' (string, required)
+- dateOfBirth: '1980-02-24' (date, required)
+- _id: `12345678908754324567854345675432` (string, optional) - Technical database ID
+- phonenumber (array[PhoneNumber])
+- address (array[Address])
+
+## Address (object)
+- type (enum, required)
+  - `BILLING` (string) - Billing address
+  - `DELIVERY` (string) - Delivery
+- streetAdress: `21 2nd Street` (string, required)
+- city: `New York` (string, required)
+- postcode:  `50858` (string, required)
+- country:  `US` (string, required)
+- _id: `12345678908754324567854345675432` (string, optional) - Technical database ID
+
+## PhoneNumber (object)
+- type (enum, required)
+    - 'HOME' (string) - Home phone number
+    - 'MOBILE' (string) - mobile phone number
+- countryCode: 31 (number, required)
+- number: 1234567890 (number, required)
