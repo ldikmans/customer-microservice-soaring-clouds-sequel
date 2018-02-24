@@ -23,10 +23,17 @@ Sign up as a new customer
                 "message":"your account has been created, please check your email for account verification"
             }
             
+
+## Customer details [/profile/{username}]
+
 ### Edit profile [PUT]
 Update to an existing profile
 
 + Request (application/json)
+
+    + Parameters
+        
+        - username: 'john.doe@gmail.com' (string, required) - unique username
     
     + Body 
         
@@ -46,7 +53,7 @@ Update to an existing profile
 
 + Response 401
 
-## Health Check [/api/health]
+## Health Check [/health]
 
 ### Get service health state [GET]
 Get service health information
