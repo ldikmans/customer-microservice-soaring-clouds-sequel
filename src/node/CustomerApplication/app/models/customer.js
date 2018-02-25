@@ -20,7 +20,7 @@ var PaymentDetailSchema = new Schema({
       type: {type: String},
       cardNumber: {type: String},
       expirationDate: {type: String},
-      preferred: {type:Boolean, default:true},
+      preferred: {type:Boolean},
       nameOnCard: {type: String}
 });
 
