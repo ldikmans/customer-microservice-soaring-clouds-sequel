@@ -4,12 +4,10 @@ exports.signup = function (req, res) {
     
     var newCustomer = new Customer(mapCustomerData(req.body));
     
-    console.log("newCustomer = " + JSON.stringify(newCustomer));
-    // save the bear and check for errors
     newCustomer.save(function (err) {
         if (err) {
             console.error("error saving new customer to database: " + err);
-            res.send(err);
+            res.status(422).send(err);
         }
         else{
             res.json({"message": "your account has been created, please check your email for account verification"});
@@ -35,23 +33,23 @@ function mapCustomerData(body) {
         customer.dateOfBirth = body.dateOfBirth;
     }
   
-    if (body.phoneNumber) {
+    if (body.phoneNumbers) {
         var phoneNumbers = [];
         var phoneNumber = {};
-        for (i = 0; i < body.phoneNumber.length; i++) {
-            if (body.phoneNumber[i]) {
-                if (body.phoneNumber[i].type) {
-                    phoneNumber.type = body.phoneNumber[i].type;
+        for (i = 0; i < body.phoneNumbers.length; i++) {
+            if (body.phoneNumbers[i]) {
+                if (body.phoneNumbers[i].type) {
+                    phoneNumber.type = body.phoneNumbers[i].type;
                 }
-                if (body.phoneNumber[i].countryCode) {
-                    phoneNumber.countryCode = body.phoneNumber[i].countryCode;
+                if (body.phoneNumbers[i].countryCode) {
+                    phoneNumber.countryCode = body.phoneNumbers[i].countryCode;
                 }
-                if (body.phoneNumber[i].number) {
-                    phoneNumber.number = body.phoneNumber[i].number;
+                if (body.phoneNumbers[i].number) {
+                    phoneNumber.number = body.phoneNumbers[i].number;
                 }
                 phoneNumbers.push(phoneNumber);
+                phoneNumber = {};
             }
-            phoneNumber = {};
         }
         if (phoneNumbers.length > 0) {
             customer.phoneNumbers = phoneNumbers;
@@ -59,28 +57,28 @@ function mapCustomerData(body) {
     }
     ;
 
-    if (body.address) {
+    if (body.addresses) {
         var addresses = [];
         var address = {};
-        for (i = 0; i < body.address.length; i++) {
-            if (body.address[i]) {
-                if (body.address[i].type) {
-                    address.type = body.address[i].type;
+        for (i = 0; i < body.addresses.length; i++) {
+            if (body.addresses[i]) {
+                if (body.addresses[i].type) {
+                    address.type = body.addresses[i].type;
                 }
-                if (body.address[i].streetName) {
-                    address.streetName = body.address[i].streetName;
+                if (body.addresses[i].streetName) {
+                    address.streetName = body.addresses[i].streetName;
                 }
-                if (body.address[i].streetNumber) {
-                    address.streetNumber = body.address[i].streetNumber;
+                if (body.addresses[i].streetNumber) {
+                    address.streetNumber = body.addresses[i].streetNumber;
                 }
-                if (body.address[i].city) {
-                    address.city = body.address[i].city;
+                if (body.addresses[i].city) {
+                    address.city = body.addresses[i].city;
                 }
-                if (body.address[i].postcode) {
-                    address.postcode = body.address[i].postcode;
+                if (body.addresses[i].postcode) {
+                    address.postcode = body.addresses[i].postcode;
                 }
-                if (body.address[i].country) {
-                    address.country = body.address[i].country;
+                if (body.addresses[i].country) {
+                    address.country = body.addresses[i].country;
                 }
                 addresses.push(address);
                 address = {};
@@ -96,26 +94,25 @@ function mapCustomerData(body) {
         for (i = 0; i < body.paymentDetails.length; i++) {
             if (body.paymentDetails[i]) {
 
-                if (body.paymentDetails.type) {
-                    paymentDetail.type = body.paymentDetails.type;
+                if (body.paymentDetails[i].type) {
+                    paymentDetail.type = body.paymentDetails[i].type;
                 }
-                if (body.paymentDetails.cardNumber) {
-                    paymentDetail.cardNumber = body.paymentDetails.cardNumber;
+                if (body.paymentDetails[i].cardNumber) {
+                    paymentDetail.cardNumber = body.paymentDetails[i].cardNumber;
                 }
-                if (body.paymentDetails.expirationDate) {
-                    paymentDetail.expirationDate = body.paymentDetails.expirationDate;
+                if (body.paymentDetails[i].expirationDate) {
+                    paymentDetail.expirationDate = body.paymentDetails[i].expirationDate;
                 }
-                if (body.paymentDetails.nameOnCard) {
-                    paymentDetail.nameOnCard = body.paymentDetails.nameOnCard;
+                if (body.paymentDetails[i].nameOnCard) {
+                    paymentDetail.nameOnCard = body.paymentDetails[i].nameOnCard;
                 }
                 paymentDetails.push(paymentDetail);
                 paymentDetail = {};
             }
         }
         if (paymentDetails.length > 0) {
-            paymentDetails.push(paymentDetail);
+            customer.paymentDetails = paymentDetails;
         }
-        customer.paymentDetails = paymentDetails;
     };
 
     if (body.preferences) {
@@ -132,7 +129,6 @@ function mapCustomerData(body) {
         }
         customer.preferences = preferences;
     }
-    console.log ("customer: " + JSON.stringify(customer));
     return customer;
 }
 ;

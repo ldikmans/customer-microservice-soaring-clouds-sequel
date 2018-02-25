@@ -35,8 +35,7 @@ var CustomerSchema   = new Schema({
   title: {type: String},
   email: {type: String, unique: true},
   dateOfBirth: {type: Date},
-  _id: {type: Schema.Types.ObjectId},
-  phonenumbers: [PhoneNumberSchema],
+  phoneNumbers: [PhoneNumberSchema],
   addresses: [AddressSchema],
   paymentDetails: [PaymentDetailSchema],
   preferences: PreferencesSchema
