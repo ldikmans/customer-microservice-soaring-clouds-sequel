@@ -90,7 +90,7 @@ Get service health information
 - phoneNumber (array[PhoneNumber], optional)
 - address (array[Address], required)
 - paymentDetails (array[PaymentType], optional)
-- preferences (array[Preference], optional)
+- preferences (Preference, optional)
 
 ## Address (object)
 - type (enum, required)
@@ -117,6 +117,7 @@ Get service health information
     - 'DEBIT' (string) - paypall
 - cardNumber: 1234341413231 (string, required)
 - expirationDate: 09/22 (string, optional)
+- preffered: true (boolean, optional) - preferred payment type, default is false
 - nameOnCard: 'Doe' (string, required)
 
 ## Preference (object)
