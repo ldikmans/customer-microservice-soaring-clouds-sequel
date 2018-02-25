@@ -1,5 +1,7 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
+var bcrypt = require('bcrypt');
+const SALTROUNDS = 10;
 
 var PhoneNumberSchema = new Schema({
     type: {type: String, required:true},
@@ -41,6 +43,18 @@ var CustomerSchema   = new Schema({
   paymentDetails: [PaymentDetailSchema],
   preferences: PreferencesSchema
 });
+
+CustomerSchema.pre('save', function(next){
+    var customer = this;
+    bcrypt.hash(customer.password, SALTROUNDS, function (err, hash){
+    if (err) {
+      return next(err);
+    }
+    customer.password = hash;
+    next();
+  });
+});
+
 
 module.exports = mongoose.model('Customer', CustomerSchema);
 

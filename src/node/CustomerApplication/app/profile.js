@@ -1,32 +1,57 @@
 var Customer = require('./models/customer');
+var bcrypt = require('bcrypt');
+
 
 exports.signup = function (req, res) {
-    
+
     var newCustomer = new Customer(mapCustomerData(req.body));
-    
+
     newCustomer.save(function (err) {
         if (err) {
             console.error("error saving new customer to database: " + err);
             res.status(422).send(err);
-        }
-        else{
+        } else {
             res.json({"message": "your account has been created, please check your email for account verification"});
         }
     });
 };
 
-exports.signin = function (req, res){
+exports.signin = function (req, res) {
     
+    var username = req.body.username;
+    console.log('username:' + username);
+    Customer.findOne({email:username}, function (error, customer) {
+        if (error) {
+            console.error("error looking up user: " + err);
+            res.status(401).send();
+        } else if (!customer) {
+            var err = new Error('Customer not found');
+            console.log(err);
+            res.status(401).send("username or password incorrect");
+        } else {
+            bcrypt.compare(req.body.password, customer.password, function (err, result) {
+                if (err) {
+                    console.error("err comparing passwords");
+                    res.status(500).send("internal servererror");
+                } else if (result === false) {
+                    console.error("password incorrect");
+                    res.status(403).send("username of password incorrect");
+                }
+                if (result === true) {
+                    res.status(204).send();
+                }
+            });
+        }
+    });
 };
 
-exports.updateProfile = function(req, res){
-    Customer.findByIdAndUpdate(req.params._id, mapCustomerData(req.body),function(err, doc){
-        if(err){
+exports.updateProfile = function (req, res) {
+    Customer.findByIdAndUpdate(req.params._id, mapCustomerData(req.body), function (err, doc) {
+        if (err) {
             console.error("error updating customer profile:" + err);
             res.status(422).send(err);
-        }
-        else{
-           res.status(204).send(doc);
+        } else {
+            res.status(204).send(doc);
         }
     });
 };
@@ -45,13 +70,13 @@ function mapCustomerData(body) {
     if (body.email) {
         customer.email = body.email;
     }
-    if (body.password){
+    if (body.password) {
         customer.password = body.password;
     }
     if (body.dateOfBirth) {
         customer.dateOfBirth = body.dateOfBirth;
     }
-  
+
     if (body.phoneNumbers) {
         var phoneNumbers = [];
         var phoneNumber = {};
@@ -132,7 +157,8 @@ function mapCustomerData(body) {
         if (paymentDetails.length > 0) {
             customer.paymentDetails = paymentDetails;
         }
-    };
+    }
+    ;
 
     if (body.preferences) {
         preferences = {};

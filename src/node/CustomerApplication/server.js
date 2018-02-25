@@ -45,7 +45,7 @@ router.put('/profile/:_id', function (req, res) {
 });
 
 router.post('/signin', function (req, res) {
-    res.status(204).send();
+    profile.signin(req,res);
 });
 
 // all of our routes will be prefixed with /customer
