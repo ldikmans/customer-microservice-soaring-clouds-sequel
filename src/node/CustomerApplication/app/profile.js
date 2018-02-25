@@ -15,6 +15,22 @@ exports.signup = function (req, res) {
     });
 };
 
+exports.signin = function (req, res){
+    
+};
+
+exports.updateProfile = function(req, res){
+    Customer.findByIdAndUpdate(req.params._id, mapCustomerData(req.body),function(err, doc){
+        if(err){
+            console.error("error updating customer profile:" + err);
+            res.status(422).send(err);
+        }
+        else{
+           res.status(204).send(doc);
+        }
+    });
+};
+
 function mapCustomerData(body) {
     var customer = {};
     if (body.firstName) {
@@ -28,6 +44,9 @@ function mapCustomerData(body) {
     }
     if (body.email) {
         customer.email = body.email;
+    }
+    if (body.password){
+        customer.password = body.password;
     }
     if (body.dateOfBirth) {
         customer.dateOfBirth = body.dateOfBirth;

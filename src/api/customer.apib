@@ -5,9 +5,21 @@ HOST: http://polls.apiblueprint.org/customer
 
 Customer is the API as defined for the Customer Microservice that is used for the soaring through the clouds demo sequel.
 
-## Profile [/profile]
+## Profile [/profile?email={email}]
 
 The profile consists of a number of parts: Customer, Address, Phonenumber, Payment details and Preferences
+
+### findCustomerByUsername [GET] 
+
++ Request
+    
+    + Parameters
+        + email: 'john.doe@gmail.com' (string)
+
++ Response 200 (application/json)
+
+    + Attributes (Customer)
+
 ### Signup [POST]
 Sign up as a new customer
 
@@ -22,9 +34,12 @@ Sign up as a new customer
             {
                 "message":"your account has been created, please check your email for account verification"
             }
+        
             
 
-## Customer details [/profile/{_id}]
+
+
+## Profile details [/profile/{_id}]
 
 ### Edit profile [PUT]
 Update to an existing profile
@@ -33,15 +48,15 @@ Update to an existing profile
 
     + Parameters
         
-        - _id: 'john.doe@gmail.com' (string, required) - unique username
-    
-    + Body 
+        - _id: '329381818398302' (string, required) - unique username
         
-    + Attributes (Customer)
+        + Attributes (Customer)
     
-+ Response 204 (application/json)
++ Response 200 (application/json)
+    
+        + Attributes (Customer)
 
-## Identiy [/signin]
+## Identity [/signin]
 
 ### Signin [POST]
 
@@ -65,61 +80,64 @@ Get service health information
 # Data structures
 
 ## Health Check Response
-- version: `0.1` (number, optional)
+- version: 0.1 (number, optional)
 - status (enum, required)
-  - `OK` (string) - Everything fine with the service
-  - `FAILED` (string) - Something is wrong with the service
-- uptime: `1234.1` (number) - The uptime of the service in minutes
+  - OK (string) - Everything fine with the service
+  - FAILED (string) - Something is wrong with the service
+- uptime: 1234.1 (number) - The uptime of the service in minutes
 
 ## User
-- username: "john.doe@gmail.com" (string, required) - email address is used for username
-- password: '1232323' (string, required)
+- username: john.doe@gmail.com (string, required) - email address is used for username
+- password: 1232323 (string, required)
 
 ## Customer
 
-- firstName: `John` (string, required)
-- lastName: `Doe` (string, required)
+- firstName: John (string, required)
+- lastName: Doe (string, required)
 - title (enum, required)
-    - 'Mr' (string) - Mister
-    - 'Mrs' (string) - Mrs
-    - 'Ms' (string) - Ms
-    - 'Miss" (string) - Miss
-- email: 'John.doe@gmail.com' (string, required)
-- dateOfBirth: '1980-02-24' (date, required)
-- _id: `12345678908754324567854345675432` (string, optional) - Technical database ID
+    - Mr (string) - Mister
+    - Mrs (string) - Mrs
+    - Ms (string) - Ms
+    - Miss (string) - Miss
+- email: john.doe@gmail.com (string, required)
+- password: apassword (string)
+- dateOfBirth: 1980-02-24 (date, required)
 - phoneNumbers (array[PhoneNumber], optional)
 - addresses (array[Address], required)
 - paymentDetails (array[PaymentType], optional)
 - preferences (Preference, optional)
+- _id: 12345678908754324567854345675432 (string, optional) - Technical database ID
 
 ## Address (object)
 - type (enum, required)
-  - `BILLING` (string) - Billing address
-  - `DELIVERY` (string) - Delivery
-- streetName: `2nd Street` (string, required)
-- streetNumber: '21' (string, required)
-- city: `New York` (string, required)
-- postcode:  `50858` (string, required)
-- country:  `US` (string, required)
-- _id: `12345678908754324567854345675432` (string, optional) - Technical database ID
+  - BILLING (string) - Billing address
+  - DELIVERY (string) - Delivery
+- streetName: 2nd Street (string, required)
+- streetNumber: 21 (string, required)
+- city: New York (string, required)
+- postcode:  50858 (string, required)
+- country:  US (string, required)
+- _id: 12345678908754324567854345675432 (string, optional) - Technical database ID
 
 ## PhoneNumber (object)
 - type (enum, required)
-    - 'HOME' (string) - Home phone number
-    - 'MOBILE' (string) - mobile phone number
+    - HOME (string) - Home phone number
+    - MOBILE (string) - mobile phone number
 - countryCode: 31 (number, required)
 - number: 1234567890 (number, required)
-- id" '1272837937' (string, optional) - Technical database ID
+- _id 1272837937 (string, optional) - Technical database ID
 
 ## PaymentType (object)
 - type (enum, required)
-    - 'CREDIT' (string) - credit card payments
-    - 'DEBIT' (string) - paypall
+    - CREDIT (string) - credit card payments
+    - DEBIT (string) - paypall
 - cardNumber: 1234341413231 (string, required)
 - expirationDate: 09/22 (string, optional)
 - preffered: true (boolean, optional) - preferred payment type, default is false
-- nameOnCard: 'Doe' (string, required)
+- nameOnCard: Doe (string, required)
+- _id: 12312872372 (string, optional) - Technical database ID
 
 ## Preference (object)
 - newsLetter (boolean, required)- indication if the customer wants to receive a newsletter
-- offers (boolean, required) - indicatio if te customer wants to receive offers
+- offers (boolean, required) - indication if te customer wants to receive offers
+- _id: '1239239183282i3232' (string, optional) - Technical database ID

@@ -41,7 +41,7 @@ router.post('/profile', function (req, res) {
 });
 
 router.put('/profile/:_id', function (req, res) {
-    res.status(204).send();
+    profile.updateProfile(req,res);
 });
 
 router.post('/signin', function (req, res) {
