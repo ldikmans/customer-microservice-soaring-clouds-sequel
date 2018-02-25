@@ -1,21 +1,8 @@
-var mongoose     = require(mongoose);
+var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
-var CustomerSchema   = new Schema({
-  firstName: {type:String},
-  lastName: {type:String},
-  title: {type: String},
-  email: {type: String, match: '/[a-z]@[a-z].[a-z]/', unique: true},
-  dateOfBirth: {type: Date},
-  _id: {type: Schema.Types.ObjectId},
-  phonenumber: [PhoneNumberSchema],
-  address: [AddressSchema],
-  paymentDetails: PaymentDetailsSchema,
-  preferences: PreferencesSchema
-});
-
 var PhoneNumberSchema = new Schema({
-    type: {tye: String, required:true},
+    type: {type: String, required:true},
     countryCode: {type: Number, required: true},
     number: {type: Number, requred: true}
 });
@@ -29,16 +16,30 @@ var AddressSchema = new Schema({
       country: {type: String}
 });
   
-var PaymentDetailsSchema = new Schema({
+var PaymentDetailSchema = new Schema({
       type: {type: String},
       cardNumber: {type: String},
       expirationDate: {type: String},
+      preferred: {type:Boolean, default:true},
       nameOnCard: {type: String}
 });
 
 var PreferencesSchema = new Schema({
       newsLetter: {type: Boolean},
       offers: {type: Boolean}
+});
+
+var CustomerSchema   = new Schema({
+  firstName: {type:String},
+  lastName: {type:String},
+  title: {type: String},
+  email: {type: String, unique: true},
+  dateOfBirth: {type: Date},
+  _id: {type: Schema.Types.ObjectId},
+  phonenumbers: [PhoneNumberSchema],
+  addresses: [AddressSchema],
+  paymentDetails: [PaymentDetailSchema],
+  preferences: PreferencesSchema
 });
 
 module.exports = mongoose.model('Customer', CustomerSchema);
