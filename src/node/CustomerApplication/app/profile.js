@@ -1,26 +1,57 @@
 var Customer = require('./models/customer');
 var bcrypt = require('bcrypt');
+var publisher = require('./producer');
 
+
+exports.getCustomers = function (req, res) {
+    Customer.find({}, function (error, customers) {
+        if (error) {
+            console.error("error finding users " + err);
+            res.status(500).send();
+        } else if (!customers) {
+            var err = new Error('No Customers found');
+            console.log(err);
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(customers);
+        }
+    });
+};
+
+exports.deleteCustomer = function (req, res) {
+    var id = req.params._id;
+
+    Customer.findOneAndRemove({_id: id}, function (err) {
+        if (err) {
+            console.error('error deleting the customer' + err);
+            res.status(500).send(err);
+        } else {
+            console.log('customer deleted');
+            res.status(204).send();
+        }
+    });
+};
 
 exports.signup = function (req, res) {
 
     var newCustomer = new Customer(mapCustomerData(req.body));
 
-    newCustomer.save(function (err) {
+    newCustomer.save(function (err, newCustomer) {
         if (err) {
             console.error("error saving new customer to database: " + err);
             res.status(422).send(err);
         } else {
+            publisher.publishCustomerEvent(newCustomer);
             res.json({"message": "your account has been created, please check your email for account verification"});
         }
     });
 };
 
 exports.signin = function (req, res) {
-    
+
     var username = req.body.username;
     console.log('username:' + username);
-    Customer.findOne({email:username}, function (error, customer) {
+    Customer.findOne({email: username}, function (error, customer) {
         if (error) {
             console.error("error looking up user: " + err);
             res.status(401).send();
@@ -38,6 +69,7 @@ exports.signin = function (req, res) {
                     res.status(403).send("username of password incorrect");
                 }
                 if (result === true) {
+                    publisher.publishSignInEvent(customer);
                     res.status(204).send();
                 }
             });
@@ -51,6 +83,7 @@ exports.updateProfile = function (req, res) {
             console.error("error updating customer profile:" + err);
             res.status(422).send(err);
         } else {
+            publisher.publishCustomerEvent(doc);
             res.status(204).send(doc);
         }
     });
