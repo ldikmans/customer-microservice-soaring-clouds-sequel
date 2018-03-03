@@ -69,7 +69,13 @@ exports.signin = function (req, res) {
                     res.status(403).send("username of password incorrect");
                 }
                 if (result === true) {
-                    publisher.publishSignInEvent(customer);
+                    var user = {
+                        'username': customer.email,
+                        'firstName': customer.firstName,
+                        'lastName': customer.lastName
+                    };
+                    console.log('caling producer with user ' + JSON.stringify(user));
+                    publisher.publishSignInEvent(user);
                     res.status(204).send();
                 }
             });

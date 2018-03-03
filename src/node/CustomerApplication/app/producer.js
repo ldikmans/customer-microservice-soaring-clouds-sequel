@@ -16,11 +16,11 @@ exports.initKafkaAvro = function () {
 };
 
 exports.publishSignInEvent = function (user) {
-    console.log('publising user');
+    console.log('publising user ' + JSON.stringify(user));
     kafkaAvro.getProducer({
         debug: 'all'
     }).then(function (producer) {
-        var topicName = 'a516817-soaring-user-sign-ins-value';
+        var topicName = 'a516817-soaring-user-sign-ins';
 
         producer.on('disconnected', function (arg) {
             console.log('producer disconnected. ' + JSON.stringify(arg));
@@ -48,7 +48,7 @@ exports.publishSignInEvent = function (user) {
 
 
 
-        var key = user._ider;
+        var key = user._id;
         var partition = -1;
         producer.produce(topic, partition, user, key);
     });
@@ -62,7 +62,7 @@ exports.publishCustomerEvent = function (customer) {
     })
 
             .then(function (producer) {
-                var topicName = 'a516817-soaring-customers-value';
+                var topicName = 'a516817-soaring-customers';
 
                 producer.on('disconnected', function (arg) {
                     console.log('producer disconnected. ' + JSON.stringify(arg));
