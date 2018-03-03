@@ -10,34 +10,34 @@ var PhoneNumberSchema = new Schema({
 });
 
 var AddressSchema = new Schema({
-      type: {type: String},
-      streetName: {type: String},
-      streetNumer: {type: String},
-      city: {type: String},
-      postcode: {type: String},
-      country: {type: String}
+      type: {type: String, required: true},
+      streetName: {type: String, required: true},
+      streetNumber: {type: String, required: true},
+      city: {type: String, required: true},
+      postcode: {type: String, required: true},
+      country: {type: String, required: true}
 });
   
 var PaymentDetailSchema = new Schema({
-      type: {type: String},
-      cardNumber: {type: String},
+      type: {type: String, required: true},
+      cardNumber: {type: String, required: true},
       expirationDate: {type: String},
       preferred: {type:Boolean},
-      nameOnCard: {type: String}
+      nameOnCard: {type: String, required: true}
 });
 
 var PreferencesSchema = new Schema({
-      newsLetter: {type: Boolean},
-      offers: {type: Boolean}
+      newsLetter: {type: Boolean, required: true},
+      offers: {type: Boolean, required: true}
 });
 
 var CustomerSchema   = new Schema({
-  firstName: {type:String},
-  lastName: {type:String},
-  title: {type: String},
-  email: {type: String, unique: true, lowercase: true},
+  firstName: {type:String, required: true},
+  lastName: {type:String, required: true},
+  title: {type: String, required:true},
+  email: {type: String, unique: true, lowercase: true, required: true},
   password: {type: String},
-  dateOfBirth: {type: Date},
+  dateOfBirth: {type: Date, required: true},
   phoneNumbers: [PhoneNumberSchema],
   addresses: [AddressSchema],
   paymentDetails: [PaymentDetailSchema],

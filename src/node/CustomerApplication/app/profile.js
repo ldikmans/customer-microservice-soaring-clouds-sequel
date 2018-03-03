@@ -115,6 +115,9 @@ function mapCustomerData(body) {
     if (body.dateOfBirth) {
         customer.dateOfBirth = body.dateOfBirth;
     }
+    if (body._id){
+        customer._id = body._id;
+    }
 
     if (body.phoneNumbers) {
         var phoneNumbers = [];
@@ -185,6 +188,9 @@ function mapCustomerData(body) {
                 }
                 if (body.paymentDetails[i].expirationDate) {
                     paymentDetail.expirationDate = body.paymentDetails[i].expirationDate;
+                }
+                if(body.paymentDetails[i].preferred){
+                    paymentDetail.preferred = body.paymentDetails[i].preferred;
                 }
                 if (body.paymentDetails[i].nameOnCard) {
                     paymentDetail.nameOnCard = body.paymentDetails[i].nameOnCard;
