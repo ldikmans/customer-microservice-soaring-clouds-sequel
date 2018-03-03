@@ -6,19 +6,22 @@ exports.initKafkaAvro = function () {
             {
                 kafkaBroker: '129.150.77.116:6667',
                 schemaRegistry: 'http://129.150.114.134:8081',
+                'dr_cb': false,
                 parseOptions: {wrapUnions: true}
             }
     );
     kafkaAvro.init()
             .then(function () {
                 console.log('Kafka Avro Ready to use');
+
             });
 };
 
 exports.publishSignInEvent = function (user) {
     console.log('publising user ' + JSON.stringify(user));
     kafkaAvro.getProducer({
-        debug: 'all'
+        debug: 'all',
+        log_level: 7
     }).then(function (producer) {
         var topicName = 'a516817-soaring-user-sign-ins';
 
@@ -32,6 +35,7 @@ exports.publishSignInEvent = function (user) {
         });
 
         producer.on('delivery-report', function (err, report) {
+            console.log('in delivery report');
             if (err) {
                 console.error('error occurred: ' + err);
             } else {
@@ -40,17 +44,18 @@ exports.publishSignInEvent = function (user) {
         });
 
 
+        console.log('publishing to topic ..')
         var topic = producer.Topic(topicName, {
             'request.required.acks': 1
         });
 
-        console.log(kafkaAvro.sr);
+        //console.log(kafkaAvro.sr);
 
-
-
-        var key = user._id;
         var partition = -1;
-        producer.produce(topic, partition, user, key);
+        producer.produce(topic, partition, user);
+
+
+
     });
 
 };
@@ -58,6 +63,7 @@ exports.publishSignInEvent = function (user) {
 exports.publishCustomerEvent = function (customer) {
     console.log('publishing customer');
     kafkaAvro.getProducer({
+        debug: 'all',
         log_level: 7
     })
 
@@ -86,7 +92,7 @@ exports.publishCustomerEvent = function (customer) {
                     'request.required.acks': 1
                 });
 
-                console.log(kafkaAvro.sr);
+                //console.log(kafkaAvro.sr);
 
 
 
