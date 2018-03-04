@@ -91,8 +91,15 @@ exports.publishCustomerEvent = function (customer) {
 
 
                 var key = customer._id;
+                //var key = 'test_key_from_real_code';
+                console.log('key: ' + key);
+                if(!key){
+                    key = customer.firstName + '_' + customer.lastName;
+                }
                 var partition = -1;
-                producer.produce(topic, partition, mapCustomerToAvroCustomer(customer), key);
+                newCustomer = mapCustomerToAvroCustomer(customer);
+                console.log('newCustomer: ' + JSON.stringify(newCustomer));
+                producer.produce(topic, partition, newCustomer, key);
             });
 
 };
@@ -100,27 +107,14 @@ exports.publishCustomerEvent = function (customer) {
 function mapCustomerToAvroCustomer(body){
     
 var customer = {};
-    if (body.firstName) {
-        customer.firstName = body.firstName;
-    }
-    if (body.lastName) {
-        customer.lastName = body.lastName;
-    }
-    if (body.title) {
-        customer.title = body.title;
-    }
-    if (body.email) {
-        customer.email = body.email;
-    }
-    if (body.password) {
-        customer.password = {'string': body.password};
-    }
-    if (body.dateOfBirth) {
-        customer.dateOfBirth = {'string': body.dateOfBirth.toString()};
-    }
-    if (body._id){
-        customer._id = {'string': body._id};
-    }
+    
+    customer.firstName = body.firstName;
+    customer.lastName = body.lastName;
+    customer.title = body.title;
+    customer.email = body.email;
+    customer.dateOfBirth = {"string": body.dateOfBirth.toString()};
+    customer._id = {"string": (body._id).toString()};
+    //customer._id = {"string": 'hardcodedTest'};
 
     if (body.phoneNumbers) {
         var phoneNumbers = [];
@@ -140,10 +134,9 @@ var customer = {};
                 phoneNumber = {};
             }
         }
-        if (phoneNumbers.length > 0) {
-            customer.phoneNumbers = {'array': phoneNumbers};
-        }
     }
+    customer.phoneNumbers = {"array": phoneNumbers};
+
     ;
 
     if (body.addresses) {
@@ -173,10 +166,9 @@ var customer = {};
                 address = {};
             }
         }
-        if (addresses.length > 0) {
-            customer.addresses = {'array': addresses};
-        }
     }
+    customer.addresses = {"array": addresses};
+
     if (body.paymentDetails) {
         var paymentDetails = [];
         var paymentDetail = {};
@@ -190,10 +182,10 @@ var customer = {};
                     paymentDetail.cardNumber = body.paymentDetails[i].cardNumber;
                 }
                 if (body.paymentDetails[i].expirationDate) {
-                    paymentDetail.expirationDate = {'string': body.paymentDetails[i].expirationDate};
+                    paymentDetail.expirationDate = {"string": body.paymentDetails[i].expirationDate};
                 }
                 if(body.paymentDetails[i].preferred){
-                    paymentDetail.preferred = {'boolean': body.paymentDetails[i].preferred};
+                    paymentDetail.preferred = {"boolean": body.paymentDetails[i].preferred};
                 }
                 if (body.paymentDetails[i].nameOnCard) {
                     paymentDetail.nameOnCard = body.paymentDetails[i].nameOnCard;
@@ -202,27 +194,25 @@ var customer = {};
                 paymentDetail = {};
             }
         }
-        if (paymentDetails.length > 0) {
-            customer.paymentDetails = {'array' : paymentDetails};
-        }
-    }
-    ;
+    };
+      
+    customer.paymentDetails = {"array" : paymentDetails};
 
     if (body.preferences) {
         preferences = {};
         if (body.preferences.newsLetter) {
             preferences.newsLetter = body.preferences.newsLetter;
         } else {
-            preferences.newsLetter = {'boolean': false};
+            preferences.newsLetter = {"boolean": false};
         }
         if (body.preferences.offers) {
             preferences.offers = body.preferences.offers;
         } else {
-            preferences.offers = {'boolean': false};
+            preferences.offers = {"boolean": false};
         }
-        customer.preferences = preferences;
-    }
-    console.log('customer: ' + JSON.stringify(customer));
+    };
+    customer.preferences = preferences;
+    
     return customer;
 }
 ;
