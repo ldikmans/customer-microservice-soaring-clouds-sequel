@@ -141,7 +141,7 @@ var customer = {};
             }
         }
         if (phoneNumbers.length > 0) {
-            customer.phoneNumbers = phoneNumbers;
+            customer.phoneNumbers = {'array': phoneNumbers};
         }
     }
     ;
@@ -174,7 +174,7 @@ var customer = {};
             }
         }
         if (addresses.length > 0) {
-            customer.addresses = addresses;
+            customer.addresses = {'array': addresses};
         }
     }
     if (body.paymentDetails) {
@@ -190,10 +190,10 @@ var customer = {};
                     paymentDetail.cardNumber = body.paymentDetails[i].cardNumber;
                 }
                 if (body.paymentDetails[i].expirationDate) {
-                    paymentDetail.expirationDate = {'String': body.paymentDetails[i].expirationDate};
+                    paymentDetail.expirationDate = {'string': body.paymentDetails[i].expirationDate};
                 }
                 if(body.paymentDetails[i].preferred){
-                    paymentDetail.preferred = {'Boolean': body.paymentDetails[i].preferred};
+                    paymentDetail.preferred = {'boolean': body.paymentDetails[i].preferred};
                 }
                 if (body.paymentDetails[i].nameOnCard) {
                     paymentDetail.nameOnCard = body.paymentDetails[i].nameOnCard;
@@ -203,7 +203,7 @@ var customer = {};
             }
         }
         if (paymentDetails.length > 0) {
-            customer.paymentDetails = paymentDetails;
+            customer.paymentDetails = {'array' : paymentDetails};
         }
     }
     ;
@@ -213,12 +213,12 @@ var customer = {};
         if (body.preferences.newsLetter) {
             preferences.newsLetter = body.preferences.newsLetter;
         } else {
-            preferences.newsLetter = false;
+            preferences.newsLetter = {'boolean': false};
         }
         if (body.preferences.offers) {
             preferences.offers = body.preferences.offers;
         } else {
-            preferences.offers = false;
+            preferences.offers = {'boolean': false};
         }
         customer.preferences = preferences;
     }
