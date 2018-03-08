@@ -57,6 +57,9 @@ app.route('/customer/profile')
 
 app.route('/customer/profile/:_id')
 
+        .get(function(req, res){
+            profile.getCustomer(req, res);
+        })
         .put(function (req, res) {
             profile.updateProfile(req, res);
         })
