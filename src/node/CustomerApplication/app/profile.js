@@ -74,7 +74,7 @@ exports.signin = function (req, res) {
                         'firstName': customer.firstName,
                         'lastName': customer.lastName
                     };
-                    console.log('caling producer with user ' + JSON.stringify(user));
+                    console.log('calling producer with user ' + JSON.stringify(user));
                     publisher.publishSignInEvent(user);
                     res.status(204).send();
                 }
