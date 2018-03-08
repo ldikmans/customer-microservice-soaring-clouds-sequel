@@ -41,6 +41,22 @@ Sign up as a new customer
 
 ## Profile details [/profile/{_id}]
 
+### Get Profile (GET)
+Get the profile details of an existing customer
+
++ Request (application/json)
+
+    + Parameters
+        
+        - _id: '329381818398302' (string, required) - unique username
+        
+        + Attributes (Customer)
+    
++ Response 200 (application/json)
+    
+        + Attributes (Customer)
+
+
 ### Edit profile [PUT]
 Update to an existing profile
 
@@ -133,7 +149,7 @@ Get service health information
     - DEBIT (string) - paypall
 - cardNumber: 1234341413231 (string, required)
 - expirationDate: 09/22 (string, optional)
-- preferred: true (boolean, optional) - preferred payment type, default is false
+- preffered: true (boolean, optional) - preferred payment type, default is false
 - nameOnCard: Doe (string, required)
 - _id: 12312872372 (string, optional) - Technical database ID
 
