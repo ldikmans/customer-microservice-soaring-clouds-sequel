@@ -4,7 +4,11 @@ var publisher = require('./producer');
 
 
 exports.getCustomers = function (req, res) {
-    Customer.find({}, function (error, customers) {
+    var query = {};
+    if (req.query.username){
+        query = {email: req.query.username};
+    }
+    Customer.find(query, function (error, customers) {
         if (error) {
             console.error("error finding users " + err);
             res.status(500).send();
@@ -14,6 +18,24 @@ exports.getCustomers = function (req, res) {
             res.status(500).send(err);
         } else {
             res.status(200).send(customers);
+        }
+    });
+};
+
+exports.getCustomer = function(req, res){
+    var id = req.params._id;
+
+    Customer.find({_id: id}, function (err, customer) {
+        if (err) {
+            console.error('error finding the customer: ' + err);
+            res.status(500).send(err);
+        }
+        else if(!customer){
+            var err = new Error("Customer not found");
+            console.log (err);
+            res.status(404).send(err);
+        } else  {
+            res.status(200).send(customer);
         }
     });
 };
