@@ -5,7 +5,7 @@ var publisher = require('./producer');
 
 exports.getCustomers = function (req, res) {
     var query = {};
-    if (req.query.username){
+    if (req.query.username || req.query.email){
         query = {email: req.query.username};
     }
     Customer.find(query, function (error, customers) {
@@ -96,8 +96,8 @@ exports.signin = function (req, res) {
                         'firstName': customer.firstName,
                         'lastName': customer.lastName
                     };
-                    console.log('calling producer with user ' + JSON.stringify(user));
-                    publisher.publishSignInEvent(user);
+                  //  console.log('calling producer with user ' + JSON.stringify(user));
+                   // publisher.publishSignInEvent(user);
                     res.status(204).send();
                 }
             });
