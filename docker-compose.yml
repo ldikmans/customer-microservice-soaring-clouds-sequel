@@ -1,0 +1,22 @@
+version: '2'
+services:
+  customer-ms:
+      #Image
+      image: luisw19/customer-ms:1.0.1
+      #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
+      build: ./src/node/CustomerApplication
+      environment:
+        PORT: 8080
+        MONGO_HOST: 'cust-mongo-db'
+        KAFKA_BROKER: '129.150.77.116:6667'
+        KAFKA_REGISTRY: 'http://129.150.114.134:8081'
+      depends_on:
+        - cust-mongo-db
+      ports:
+        - "8080:8080"
+      command: npm start
+      links:
+        - cust-mongo-db
+
+  cust-mongo-db:
+      image: mongo:3.2.9

@@ -1,0 +1,55 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: customer-ms
+  name: customer-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: customer-ms
+  template:
+    metadata:
+      labels:
+        run: customer-ms
+    spec:
+      containers:
+      - args:
+        - npm
+        - start
+        env:
+        - name: PORT
+          value: "8080"
+        - name: MONGO_HOST
+          value: cust-mongo-db
+        - name: KAFKA_BROKER
+          value: 129.150.77.116:6667
+        - name: KAFKA_REGISTRY
+          value: http://129.150.114.134:8081
+        image: luisw19/customer-ms:1.0.1
+        name: customer-ms
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+
+---
+
+# APP SERVICE
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: customer-ms
+  name: customer-ms
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: customer-ms
+  type: NodePort
