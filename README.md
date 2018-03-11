@@ -36,8 +36,8 @@ Build:
 
 Push to docker hub:
 ```bash
-  docker login --username=<username>
-  docker push <username>/customer-ms:1.0.0
+	docker login --username=<username>
+	docker push <username>/customer-ms:1.0.0
 ```
 
 3) Set Kubectl file to match your target Kubernetes environment e.g.
@@ -49,12 +49,12 @@ Push to docker hub:
 4) Create Kubectl namespace if not done already (already done!)
 
 ```bash
-  kubectl create -f k8s-namespace-customer.json
+	kubectl create -f k8s-namespace-customer.json
 ```
 Check that namespace is create
 
 ```bash
-		 kubectl get namespaces --show-labels
+	kubectl get namespaces --show-labels
 ```
 
 5) Create Kubectl customer context locally
@@ -62,13 +62,13 @@ Check that namespace is create
 Define "customer" context for the kubectl client to work with. NOTE: values for cluster and user were taken from running “kubectl config view”
 
 ```bash
-		kubectl config set-context customer --namespace=customer-ms --cluster=cluster-c9051e21d5c --user=user-c9051e21d5c
+	kubectl config set-context customer --namespace=customer-ms --cluster=cluster-c9051e21d5c --user=user-c9051e21d5c
 ```
 
 Switch to "customer" context
 
 ```bash
-		kubectl config use-context customer
+	kubectl config use-context customer
 ```
 
 6) Create Deployments and Services
@@ -76,19 +76,19 @@ Switch to "customer" context
 ```bash
 	kubectl create -f cust-mongo-db.yml
 	kubectl create -f customer-ms.yml
-  kubectl create -f ingress.yml
+	kubectl create -f ingress.yml
 ```
 
 7) To get the external IP Customer Microservice is listening to the following commands:
 
 ```bash
-    kubectl get pods -o wide
+	kubectl get pods -o wide
 ```
  Take note of the "Node" IP for "customer-ms-xxx". Then run the following command to obtain the port:
 
 ```bash
 	kubectl get services customer-ms
- 	kubectl get ingress rest-customer-ing
+	kubectl get ingress rest-customer-ing
 ```
 
 8) To delete the services (if required)
