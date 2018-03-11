@@ -1,11 +1,15 @@
 var KafkaAvro = require('kafka-avro');
 var kafkaAvro;
+/*Luis Weir: changed Kafka connection details so you can configure in env variables in
+docker-compose or kubernetes manifests*/
+var kafkaBrokerVar = process.env.KAFKA_BROKER || "129.150.77.116:6667";
+var kafkaRegistryVar = process.env.KAFKA_REGISTRY || "http://129.150.114.134:8081";
 
 exports.initKafkaAvro = function () {
     kafkaAvro = new KafkaAvro(
             {
-                kafkaBroker: '129.150.77.116:6667',
-                schemaRegistry: 'http://129.150.114.134:8081',
+                kafkaBroker: kafkaBrokerVar,
+                schemaRegistry: kafkaRegistryVar,
                 parseOptions: {wrapUnions: true}
             }
     );
@@ -105,9 +109,9 @@ exports.publishCustomerEvent = function (customer) {
 };
 
 function mapCustomerToAvroCustomer(body){
-    
+
 var customer = {};
-    
+
     customer.firstName = body.firstName;
     customer.lastName = body.lastName;
     customer.title = body.title;
@@ -195,7 +199,7 @@ var customer = {};
             }
         }
     };
-      
+
     customer.paymentDetails = {"array" : paymentDetails};
 
     if (body.preferences) {
@@ -212,7 +216,7 @@ var customer = {};
         }
     };
     customer.preferences = preferences;
-    
+
     return customer;
 }
 ;

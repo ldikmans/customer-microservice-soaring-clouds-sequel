@@ -1,0 +1,40 @@
+# Mongo Deployment
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cust-mongo-db
+  labels:
+    run: cust-mongo-db
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: cust-mongo-db
+    spec:
+      containers:
+      #- image: localhost:27017/mongo:3.2.9
+      - image: mongo:3.2.9
+        name: cust-mongo-db
+        ports:
+        - name: cust-mongo-db
+          containerPort: 27017
+          hostPort: 27017
+      restartPolicy: Always
+
+---
+
+# Mongo Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: cust-mongo-db
+  labels:
+    run: cust-mongo-db
+spec:
+  clusterIP: None
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    run: cust-mongo-db
