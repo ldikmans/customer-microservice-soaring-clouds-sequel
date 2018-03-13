@@ -62,7 +62,7 @@ Check that namespace is create
 Define "customer" context for the kubectl client to work with. NOTE: values for cluster and user were taken from running “kubectl config view”
 
 ```bash
-	kubectl config set-context customer --namespace=orders-ms --cluster=cluster-ce24934b740 --user=user-ce24934b740
+	kubectl config set-context customer --namespace=customer-ms --cluster=cluster-cc128a199f4 --user=user-cc128a199f4
 ```
 
 Switch to "customer" context
