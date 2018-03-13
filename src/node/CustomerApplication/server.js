@@ -30,14 +30,11 @@ var router = express.Router();
 app.use(cors());
 app.options('*', cors()); // include before other routes
 
-/* Luis Weir: Commented as CORS lib used instead
+
 router.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
     console.log('request: ' + req.baseUrl);
     next();
-});*/
+});
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/customer)
 router.get('/', function (req, res) {

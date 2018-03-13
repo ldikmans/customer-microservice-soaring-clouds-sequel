@@ -72,7 +72,7 @@ exports.signup = function (req, res) {
 exports.signin = function (req, res) {
 
     var username = req.body.username;
-    console.log('username:' + username);
+    console.log('signing in with username:' + username);
     Customer.findOne({email: username}, function (error, customer) {
         if (error) {
             console.error("error looking up user: " + err);
@@ -94,11 +94,12 @@ exports.signin = function (req, res) {
                     var user = {
                         'username': customer.email,
                         'firstName': customer.firstName,
-                        'lastName': customer.lastName
+                        'lastName': customer.lastName,
+                        '_id:': customer._id
                     };
-                  //  console.log('calling producer with user ' + JSON.stringify(user));
-                   // publisher.publishSignInEvent(user);
-                    res.status(204).send();
+                    console.log('calling producer with user ' + JSON.stringify(user));
+                    publisher.publishSignInEvent(user);
+                    res.status(200).send(customer);
                 }
             });
         }
