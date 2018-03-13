@@ -107,13 +107,13 @@ exports.signin = function (req, res) {
 };
 
 exports.updateProfile = function (req, res) {
-    Customer.findByIdAndUpdate(req.params._id, mapCustomerData(req.body), function (err, doc) {
+    Customer.findByIdAndUpdate(req.params._id, mapCustomerData(req.body), {new:true}, function (err, doc) {
         if (err) {
             console.error("error updating customer profile:" + err);
             res.status(422).send(err);
         } else {
             publisher.publishCustomerEvent(doc);
-            res.status(204).send(doc);
+            res.status(200).send(doc);
         }
     });
 };
