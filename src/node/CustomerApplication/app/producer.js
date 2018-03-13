@@ -118,7 +118,6 @@ var customer = {};
     customer.email = body.email;
     customer.dateOfBirth = {"string": body.dateOfBirth.toString()};
     customer._id = {"string": (body._id).toString()};
-    //customer._id = {"string": 'hardcodedTest'};
 
     if (body.phoneNumbers) {
         var phoneNumbers = [];
@@ -150,12 +149,19 @@ var customer = {};
             if (body.addresses[i]) {
                 if (body.addresses[i].type) {
                     address.type = body.addresses[i].type;
+                } else{
+                    address.type = 'DELIVERY';
                 }
                 if (body.addresses[i].streetName) {
                     address.streetName = body.addresses[i].streetName;
+                } else{
+                    address.streetName = 'unknown';
                 }
                 if (body.addresses[i].streetNumber) {
                     address.streetNumber = body.addresses[i].streetNumber;
+                }
+                else{
+                    address.streetNumber = 'NA';
                 }
                 if (body.addresses[i].city) {
                     address.city = body.addresses[i].city;
@@ -190,6 +196,9 @@ var customer = {};
                 }
                 if(body.paymentDetails[i].preferred){
                     paymentDetail.preferred = {"boolean": body.paymentDetails[i].preferred};
+                }
+                else{
+                    paymentDetail.preferred = {"boolean": false};
                 }
                 if (body.paymentDetails[i].nameOnCard) {
                     paymentDetail.nameOnCard = body.paymentDetails[i].nameOnCard;
