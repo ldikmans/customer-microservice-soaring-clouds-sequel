@@ -29,7 +29,7 @@ spec:
           value: 129.150.77.116:6667
         - name: KAFKA_REGISTRY
           value: http://129.150.114.134:8081
-        image: luisw19/customer-ms:1.0.1
+        image: luisw19/customer-ms:1.0.2
         name: customer-ms
         ports:
         - containerPort: 8080
