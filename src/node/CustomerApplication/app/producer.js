@@ -214,15 +214,22 @@ var customer = {};
     if (body.preferences) {
         preferences = {};
         if (body.preferences.newsLetter) {
-            preferences.newsLetter = body.preferences.newsLetter;
+            preferences.newsLetter = {"boolean" : body.preferences.newsLetter};
         } else {
             preferences.newsLetter = {"boolean": false};
         }
         if (body.preferences.offers) {
-            preferences.offers = body.preferences.offers;
+            preferences.offers = {"boolean":  body.preferences.offers};
         } else {
             preferences.offers = {"boolean": false};
         }
+    }
+    //opt out so if you don't tell us your preferences we don't send anything
+    else{
+        preferences = {
+            "newsLetter": {"boolean": false},
+            "offers": {"boolean": false}
+        };
     };
     customer.preferences = preferences;
 
