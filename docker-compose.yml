@@ -2,7 +2,7 @@ version: '2'
 services:
   customer-ms:
       #Image
-      image: luisw19/customer-ms:1.0.2
+      image: lonneke/customer-ms:1.0.2
       #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
       build: ./src/node/CustomerApplication
       environment:
