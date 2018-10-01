@@ -1,6 +1,6 @@
 
 var express = require('express');
-var cors = require('cors'); //Luis Weir: added to suppor CORS
+var cors = require('cors'); 
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
@@ -15,18 +15,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;
-/*LuisWeir: added this variable as it's required for docker-compose and Kubernetes
-so it uses local DNS when locating Mongo instance*/
 var mongoHost = process.env.MONGO_HOST || "localhost";
 
-//LuisWeir: then used mongoHost to connect to Mongo
 mongoose.connect('mongodb://' + mongoHost + ':27017/customerdb'); // connect to our database
 
 producer.initKafkaAvro();
 
 var router = express.Router();
 
-//Enable CORS pre-flight in all operations
 app.use(cors());
 app.options('*', cors()); // include before other routes
 
@@ -36,7 +32,7 @@ router.use(function (req, res, next) {
     next();
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/customer)
+// test route to make sure everything is working (accessed at GET http://{host}:{port}/customer)
 router.get('/', function (req, res) {
     res.json({message: 'hooray! welcome to our api!'});
 });
