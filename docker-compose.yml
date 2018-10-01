@@ -2,16 +2,12 @@ version: '2'
 services:
   customer-ms:
       #Image
-      image: lonneke/customer-ms:1.0.2
-      #Uncomment "build" if you wish to build from source code, otherwise it'll pull from registry
-      build: ./src/node/CustomerApplication
+      image: lonneke/customer-ms:2.0
       environment:
         PORT: 8080
         MONGO_HOST: 'cust-mongo-db'
-        KAFKA_BROKER: '129.150.77.116:6667'
-        KAFKA_REGISTRY: 'http://129.150.114.134:8081'
-      depends_on:
-        - cust-mongo-db
+        KAFKA_BROKER: '129.156.113.171:6667'
+        KAFKA_REGISTRY: 'http://129.156.113.125:8081'
       ports:
         - "8080:8080"
       command: npm start

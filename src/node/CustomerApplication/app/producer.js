@@ -2,8 +2,12 @@ var KafkaAvro = require('kafka-avro');
 var kafkaAvro;
 /*Luis Weir: changed Kafka connection details so you can configure in env variables in
 docker-compose or kubernetes manifests*/
-var kafkaBrokerVar = process.env.KAFKA_BROKER || "129.150.77.116:6667";
-var kafkaRegistryVar = process.env.KAFKA_REGISTRY || "http://129.150.114.134:8081";
+var kafkaBrokerVar = process.env.KAFKA_BROKER || "129.156.113.171:6667";
+var kafkaRegistryVar = process.env.KAFKA_REGISTRY || "http://129.156.113.125:8081";
+
+//topics as they are defined on Kafka
+const SIGNIN_TOPIC = 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringusersignins';
+const CUSTOMER_TOPIC = 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringcustomers';
 
 exports.initKafkaAvro = function () {
     kafkaAvro = new KafkaAvro(
@@ -24,8 +28,8 @@ exports.publishSignInEvent = function (user) {
     console.log('publising user ' + JSON.stringify(user));
     kafkaAvro.getProducer({
     }).then(function (producer) {
-        var topicName = 'a516817-soaring-user-sign-ins';
-
+        var topicName = SIGNIN_TOPIC;
+        
         producer.on('disconnected', function (arg) {
             console.log('producer disconnected. ' + JSON.stringify(arg));
         });
@@ -66,7 +70,7 @@ exports.publishCustomerEvent = function (customer) {
     })
 
             .then(function (producer) {
-                var topicName = 'a516817-soaring-customers';
+                var topicName = CUSTOMER_TOPIC;
 
                 producer.on('disconnected', function (arg) {
                     console.log('producer disconnected. ' + JSON.stringify(arg));
