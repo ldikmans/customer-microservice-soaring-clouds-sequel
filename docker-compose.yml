@@ -7,7 +7,7 @@ services:
         PORT: 8080
         MONGO_HOST: 'cust-mongo-db'
         KAFKA_BROKER: '129.156.113.171:6667'
-        KAFKA_REGISTRY: 'http://129.156.113.125:8081'
+        KAFKA_REGISTRY: '129.156.113.125:8081'
       ports:
         - "8080:8080"
       command: npm start
