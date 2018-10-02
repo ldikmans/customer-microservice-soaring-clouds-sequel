@@ -21,9 +21,7 @@ app.use(bodyParser.json());
 var dbURL = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDB;
 console.log('dbURL: ' + dbURL);
 
-mongoose.connect(dbURL, function(error){
-    console.error("error while connecting to database", error);
-}); 
+mongoose.connect(dbURL);
 
 producer.initKafkaAvro();
 

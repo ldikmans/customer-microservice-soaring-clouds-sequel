@@ -17,12 +17,14 @@ exports.initKafkaAvro = function () {
                 parseOptions: {wrapUnions: true}
             }
     );
+	console.log("kafkaBroker: " + kafkaBrokerVar);
+	console.log("kafkaRegistryVar: " + kafkaRegistryVar);
     kafkaAvro.init()
             .then(function () {
                 console.log('Kafka Avro Ready to use');
 
-            }).catch(function (exception){
-              console.error("exception when initializing Avro: " + exception);  
+          //  }).catch(function (exception){								
+	  //    console.error(exception);  
             });
 };
 
