@@ -18,7 +18,10 @@ var upTime;
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDB, function(error){
+var dbURL = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDB;
+console.log('dbURL: ' + dbURL)
+
+mongoose.connect(dbURL, function(error){
     console.error("error while connecting to database", error);
 }); 
 
@@ -28,6 +31,10 @@ var router = express.Router();
 
 app.use(cors());
 app.options('*', cors()); // include before other routes
+
+app.configure(function(){
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
 
 
 router.use(function (req, res, next) {
