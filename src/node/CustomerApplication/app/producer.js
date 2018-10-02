@@ -21,6 +21,8 @@ exports.initKafkaAvro = function () {
             .then(function () {
                 console.log('Kafka Avro Ready to use');
 
+            }).catch(function (exception){
+              console.error("exception when initializing Avro: " + exception);  
             });
 };
 

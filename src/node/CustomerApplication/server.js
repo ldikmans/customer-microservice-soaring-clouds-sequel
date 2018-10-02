@@ -32,8 +32,6 @@ var router = express.Router();
 app.use(cors());
 app.options('*', cors()); // include before other routes
 
-app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-
 router.use(function (req, res, next) {
     console.log('request: ' + req.baseUrl);
     next();
