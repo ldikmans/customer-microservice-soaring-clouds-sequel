@@ -6,18 +6,21 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const profile = require('./app/profile');
 const producer = require('./app/producer');
+const port = process.env.PORT || 8080;
+const mongoHost = process.env.MONGO_HOST || "localhost";
+const mongoPort = process.env.MONGO_PORT || '27017';
+const mongoDB = process.env.MONGO_DB || 'customerdb';
+
 
 var upTime;
 
-// configure app to use bodyParser()
-// this will let us get the data from a POST
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;
-var mongoHost = process.env.MONGO_HOST || "localhost";
-
-mongoose.connect('mongodb://' + mongoHost + ':27017/customerdb'); // connect to our database
+mongoose.connect('mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDB, function(error){
+    console.error("error while connecting to database", error);
+}); 
 
 producer.initKafkaAvro();
 
