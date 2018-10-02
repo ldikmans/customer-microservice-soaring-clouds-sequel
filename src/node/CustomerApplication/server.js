@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 var dbURL = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDB;
-console.log('dbURL: ' + dbURL)
+console.log('dbURL: ' + dbURL);
 
 mongoose.connect(dbURL, function(error){
     console.error("error while connecting to database", error);
@@ -32,10 +32,7 @@ var router = express.Router();
 app.use(cors());
 app.options('*', cors()); // include before other routes
 
-app.configure(function(){
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
+app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
 router.use(function (req, res, next) {
     console.log('request: ' + req.baseUrl);
