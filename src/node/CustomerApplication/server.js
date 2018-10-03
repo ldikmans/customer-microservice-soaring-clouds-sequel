@@ -1,23 +1,27 @@
 
-var express = require('express');
-var cors = require('cors'); 
-var app = express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var profile = require('./app/profile');
-var producer = require('./app/producer');
+const express = require('express');
+const cors = require('cors'); 
+const app = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const profile = require('./app/profile');
+const producer = require('./app/producer');
+const port = process.env.PORT || 8080;
+const mongoHost = process.env.MONGO_HOST || "localhost";
+const mongoPort = process.env.MONGO_PORT || '27017';
+const mongoDB = process.env.MONGO_DB || 'customerdb';
+
 
 var upTime;
 
-// configure app to use bodyParser()
-// this will let us get the data from a POST
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;
-var mongoHost = process.env.MONGO_HOST || "localhost";
+var dbURL = 'mongodb://' + mongoHost + ':' + mongoPort + '/' + mongoDB;
+console.log('dbURL: ' + dbURL);
 
-mongoose.connect('mongodb://' + mongoHost + ':27017/customerdb'); // connect to our database
+mongoose.connect(dbURL);
 
 producer.initKafkaAvro();
 
@@ -25,7 +29,6 @@ var router = express.Router();
 
 app.use(cors());
 app.options('*', cors()); // include before other routes
-
 
 router.use(function (req, res, next) {
     console.log('request: ' + req.baseUrl);

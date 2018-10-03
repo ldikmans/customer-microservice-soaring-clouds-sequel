@@ -3,6 +3,7 @@ services:
   customer-ms:
       #Image
       image: lonneke/customer-ms:2.0
+      build: ./src/node/CustomerApplication
       environment:
         PORT: 8080
         MONGO_HOST: 'cust-mongo-db'
