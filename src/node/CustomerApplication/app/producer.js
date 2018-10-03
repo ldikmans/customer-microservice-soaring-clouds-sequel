@@ -3,7 +3,7 @@ var kafkaAvro;
 /*Luis Weir: changed Kafka connection details so you can configure in env variables in
 docker-compose or kubernetes manifests*/
 var kafkaBrokerVar = process.env.KAFKA_BROKER || "129.156.113.171:6667";
-var kafkaRegistryVar = process.env.KAFKA_REGISTRY || "http://129.156.113.125:8081";
+var kafkaRegistryVar = process.env.KAFKA_REGISTRY || "129.156.113.125:8081";
 
 //topics as they are defined on Kafka
 const SIGNIN_TOPIC = 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringusersignins';
@@ -17,10 +17,14 @@ exports.initKafkaAvro = function () {
                 parseOptions: {wrapUnions: true}
             }
     );
+	console.log("kafkaBroker: " + kafkaBrokerVar);
+	console.log("kafkaRegistryVar: " + kafkaRegistryVar);
     kafkaAvro.init()
             .then(function () {
                 console.log('Kafka Avro Ready to use');
 
+          //  }).catch(function (exception){								
+	  //    console.error(exception);  
             });
 };
 
@@ -60,6 +64,8 @@ exports.publishSignInEvent = function (user) {
 
 
 
+    }).catch(function (exception){
+        console.error("exception: " + exception);
     });
 
 };
@@ -108,6 +114,8 @@ exports.publishCustomerEvent = function (customer) {
                 newCustomer = mapCustomerToAvroCustomer(customer);
                 console.log('newCustomer: ' + JSON.stringify(newCustomer));
                 producer.produce(topic, partition, newCustomer, key);
+            }).catch(function (exception){
+                console.error("exception: " + exception);
             });
 
 };

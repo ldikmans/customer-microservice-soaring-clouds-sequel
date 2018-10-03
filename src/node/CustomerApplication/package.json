@@ -1,12 +1,17 @@
 {
     "name": "CustomerApplication",
     "version": "1.0.0",
+    "license": "BSD Zero Clause License",
+    "description": "microservice that keeps track of elementary customer data",
+    "repository":{
+         "type":"git",
+         "url":"https://github.com/ldikmans/customer-microservice-soaring-clouds-sequel.git"
+    },
     "keywords": [
-        "util",
+        "microservice",
         "functional",
         "server",
-        "client",
-        "browser"
+        "customer"
     ],
     "author": "ldikmans",
     "contributors": [],
