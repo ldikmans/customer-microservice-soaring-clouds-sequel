@@ -1,11 +1,11 @@
 {
     "name": "CustomerApplication",
-    "version": "1.0.0",
-    "license": "BSD Zero Clause License",
+    "version": "2.0.1",
+    "license": "MIT",
     "description": "microservice that keeps track of elementary customer data",
-    "repository":{
-         "type":"git",
-         "url":"https://github.com/ldikmans/customer-microservice-soaring-clouds-sequel.git"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ldikmans/customer-microservice-soaring-clouds-sequel.git"
     },
     "keywords": [
         "microservice",
@@ -19,10 +19,11 @@
     "dependencies": {
         "express": "~4.16.2",
         "mongoose": "~5.0.7",
-        "bcrypt": "~1.0.3",
+        "bcrypt": "~3.0.1",
         "kafka-avro": "~0.8.1",
         "bunyan": "^1.8.12",
         "jsonschema-avro": "^1.3.0",
+        "winston": "~3.1.0",
         "cors": "~2.8.4"
     }
 }
