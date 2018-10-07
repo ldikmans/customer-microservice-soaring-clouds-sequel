@@ -5,11 +5,12 @@ services:
       image: lonneke/customer-ms:2.0.1
       build: ./src/node/CustomerApplication
       environment:
-        LOG_LEVEL: 'info'
+        LOG_LEVEL: 'debug'
         PORT: 8080
         MONGO_HOST: 'cust-mongo-db'
         KAFKA_BROKER: '129.156.113.171:6667'      
         KAFKA_REGISTRY: 'http://129.156.113.125:8081'
+        PUBLISH: 'true'
         KAFKA_SIGNIN_TOPIC: 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringusersignins'
         KAFA_CUSTOMER_TOPIC: 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringcustomers'
       ports:
