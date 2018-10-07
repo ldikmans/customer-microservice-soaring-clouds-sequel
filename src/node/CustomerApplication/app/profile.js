@@ -87,12 +87,12 @@ exports.signin = function (req, res) {
             res.status(401).send();
         } else if (!customer) {
             var err = new Error('Customer not found');
-            logger.log(err);
+            logger.error(err);
             res.status(401).send("username or password incorrect");
         } else {
             bcrypt.compare(req.body.password, customer.password, function (err, result) {
                 if (err) {
-                    logger.error("err comparing passwords");
+                    logger.error(err);
                     res.status(500).send("internal server error");
                 } else if (result === false) {
                     logger.error("password incorrect");
