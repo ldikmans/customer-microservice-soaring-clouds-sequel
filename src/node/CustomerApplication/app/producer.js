@@ -1,13 +1,14 @@
-var KafkaAvro = require('kafka-avro');
+const KafkaAvro = require('kafka-avro');
+const logger = require('./logger');
+
 var kafkaAvro;
-/*Luis Weir: changed Kafka connection details so you can configure in env variables in
-docker-compose or kubernetes manifests*/
-var kafkaBrokerVar = process.env.KAFKA_BROKER || "129.156.113.171:6667";
-var kafkaRegistryVar = process.env.KAFKA_REGISTRY || "129.156.113.125:8081";
+
+var kafkaBrokerVar = process.env.KAFKA_BROKER || 'localhost:9092';
+var kafkaRegistryVar = process.env.KAFKA_REGISTRY || 'http://129.156.113.125:8081';
 
 //topics as they are defined on Kafka
-const SIGNIN_TOPIC = 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringusersignins';
-const CUSTOMER_TOPIC = 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringcustomers';
+const SIGNIN_TOPIC = process.env.KAFKA_SIGNIN_TOPIC || 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringusersignins';
+const CUSTOMER_TOPIC = process.env.KAFA_CUSTOMER_TOPIC || 'idcs-1d61df536acb4e9d929e79a92f3414b5-soaringcustomers';
 
 exports.initKafkaAvro = function () {
     kafkaAvro = new KafkaAvro(
@@ -17,38 +18,36 @@ exports.initKafkaAvro = function () {
                 parseOptions: {wrapUnions: true}
             }
     );
-	console.log("kafkaBroker: " + kafkaBrokerVar);
-	console.log("kafkaRegistryVar: " + kafkaRegistryVar);
+    logger.debug("kafkaBroker: " + kafkaBrokerVar);
+    logger.debug("kafkaRegistryVar: " + kafkaRegistryVar);
     kafkaAvro.init()
             .then(function () {
-                console.log('Kafka Avro Ready to use');
+                logger.info('Kafka Avro Ready to use');
 
-          //  }).catch(function (exception){								
-	  //    console.error(exception);  
             });
 };
 
 exports.publishSignInEvent = function (user) {
-    console.log('publising user ' + JSON.stringify(user));
+    logger.debug('publising user ' + JSON.stringify(user));
     kafkaAvro.getProducer({
     }).then(function (producer) {
         var topicName = SIGNIN_TOPIC;
-        
+
         producer.on('disconnected', function (arg) {
-            console.log('producer disconnected. ' + JSON.stringify(arg));
+            logger.info('producer disconnected. ' + JSON.stringify(arg));
         });
 
         producer.on('event.error', function (err) {
-            console.error('Error from producer');
-            console.error(err);
+            logger.error('Error from producer');
+            logger.error(err);
         });
 
         producer.on('delivery-report', function (err, report) {
-            console.log('in delivery report');
+            logger.info('in delivery report');
             if (err) {
-                console.error('error occurred: ' + err);
+                logger.error('error occurred: ' + err);
             } else {
-                console.log('delivery-report: ' + JSON.stringify(report));
+                logger.info('delivery-report: ' + JSON.stringify(report));
             }
         });
 
@@ -57,21 +56,20 @@ exports.publishSignInEvent = function (user) {
             'request.required.acks': 1
         });
 
-        //console.log(kafkaAvro.sr);
         var key = 'testkey';
         var partition = -1;
         producer.produce(topic, partition, user, key);
 
 
 
-    }).catch(function (exception){
-        console.error("exception: " + exception);
+    }).catch(function (exception) {
+        logger.error("exception: " + exception);
     });
 
 };
 
 exports.publishCustomerEvent = function (customer) {
-    console.log('publishing customer ' + JSON.stringify(customer));
+    logger.debug('publishing customer ' + JSON.stringify(customer));
     kafkaAvro.getProducer({
     })
 
@@ -79,19 +77,19 @@ exports.publishCustomerEvent = function (customer) {
                 var topicName = CUSTOMER_TOPIC;
 
                 producer.on('disconnected', function (arg) {
-                    console.log('producer disconnected. ' + JSON.stringify(arg));
+                    logger.info('producer disconnected. ' + JSON.stringify(arg));
                 });
 
                 producer.on('event.error', function (err) {
-                    console.error('Error from producer');
-                    console.error(err);
+                    logger.error('Error from producer');
+                    logger.error(err);
                 });
 
                 producer.on('delivery-report', function (err, report) {
                     if (err) {
-                        console.error('error: ' + err);
+                        logger.error('error: ' + err);
                     } else {
-                        console.log('delivery-report: ' + JSON.stringify(report));
+                        logger.info('delivery-report: ' + JSON.stringify(report));
                     }
                 });
 
@@ -100,29 +98,26 @@ exports.publishCustomerEvent = function (customer) {
                     'request.required.acks': 1
                 });
 
-                //console.log(kafkaAvro.sr);
-
-
-
+                
                 var key = customer._id;
                 //var key = 'test_key_from_real_code';
-                console.log('key: ' + key);
-                if(!key){
+                logger.debug('key: ' + key);
+                if (!key) {
                     key = customer.firstName + '_' + customer.lastName;
                 }
                 var partition = -1;
                 newCustomer = mapCustomerToAvroCustomer(customer);
-                console.log('newCustomer: ' + JSON.stringify(newCustomer));
+                logger.debug('newCustomer: ' + JSON.stringify(newCustomer));
                 producer.produce(topic, partition, newCustomer, key);
-            }).catch(function (exception){
-                console.error("exception: " + exception);
-            });
+            }).catch(function (exception) {
+        logger.error("exception: " + exception);
+    });
 
 };
 
-function mapCustomerToAvroCustomer(body){
+function mapCustomerToAvroCustomer(body) {
 
-var customer = {};
+    var customer = {};
 
     customer.firstName = body.firstName;
     customer.lastName = body.lastName;
@@ -161,18 +156,17 @@ var customer = {};
             if (body.addresses[i]) {
                 if (body.addresses[i].type) {
                     address.type = body.addresses[i].type;
-                } else{
+                } else {
                     address.type = 'DELIVERY';
                 }
                 if (body.addresses[i].streetName) {
                     address.streetName = body.addresses[i].streetName;
-                } else{
+                } else {
                     address.streetName = 'unknown';
                 }
                 if (body.addresses[i].streetNumber) {
                     address.streetNumber = body.addresses[i].streetNumber;
-                }
-                else{
+                } else {
                     address.streetNumber = 'NA';
                 }
                 if (body.addresses[i].city) {
@@ -206,10 +200,9 @@ var customer = {};
                 if (body.paymentDetails[i].expirationDate) {
                     paymentDetail.expirationDate = {"string": body.paymentDetails[i].expirationDate};
                 }
-                if(body.paymentDetails[i].preferred){
+                if (body.paymentDetails[i].preferred) {
                     paymentDetail.preferred = {"boolean": body.paymentDetails[i].preferred};
-                }
-                else{
+                } else {
                     paymentDetail.preferred = {"boolean": false};
                 }
                 if (body.paymentDetails[i].nameOnCard) {
@@ -219,30 +212,32 @@ var customer = {};
                 paymentDetail = {};
             }
         }
-    };
+    }
+    ;
 
-    customer.paymentDetails = {"array" : paymentDetails};
+    customer.paymentDetails = {"array": paymentDetails};
 
     if (body.preferences) {
         preferences = {};
         if (body.preferences.newsLetter) {
-            preferences.newsLetter = {"boolean" : body.preferences.newsLetter};
+            preferences.newsLetter = {"boolean": body.preferences.newsLetter};
         } else {
             preferences.newsLetter = {"boolean": false};
         }
         if (body.preferences.offers) {
-            preferences.offers = {"boolean":  body.preferences.offers};
+            preferences.offers = {"boolean": body.preferences.offers};
         } else {
             preferences.offers = {"boolean": false};
         }
     }
     //opt out so if you don't tell us your preferences we don't send anything
-    else{
+    else {
         preferences = {
             "newsLetter": {"boolean": false},
             "offers": {"boolean": false}
         };
-    };
+    }
+    ;
     customer.preferences = preferences;
 
     return customer;

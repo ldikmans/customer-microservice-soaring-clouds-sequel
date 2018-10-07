@@ -1,6 +1,8 @@
-var Customer = require('./models/customer');
-var bcrypt = require('bcrypt');
-var publisher = require('./producer');
+const Customer = require('./models/customer');
+const bcrypt = require('bcrypt');
+const publisher = require('./producer');
+const logger = require('./logger');
+var publish = process.env.PUBLISH || false;
 
 
 exports.getCustomers = function (req, res) {
@@ -10,13 +12,14 @@ exports.getCustomers = function (req, res) {
     }
     Customer.find(query, function (error, customers) {
         if (error) {
-            console.error("error finding users " + err);
+            logger.error("error finding users " +  err);
             res.status(500).send();
         } else if (!customers) {
             var err = new Error('No Customers found');
-            console.log(err);
+            logger.error(err);
             res.status(500).send(err);
         } else {
+            logger.debug("returning " + customers.length + " customers");
             res.status(200).send(customers);
         }
     });
@@ -24,17 +27,19 @@ exports.getCustomers = function (req, res) {
 
 exports.getCustomer = function(req, res){
     var id = req.params._id;
+    logger.debug("fetching profile data for customer with id: " + id);
 
-    Customer.find({_id: id}, function (err, customer) {
+    Customer.findById(id, function (err, customer) {
         if (err) {
-            console.error('error finding the customer: ' + err);
+            logger.error('error finding the customer: ' + err);
             res.status(500).send(err);
         }
-        else if(!customer){
-            var err = new Error("Customer not found");
-            console.log (err);
-            res.status(404).send(err);
+        else if(!customer || !customer._id){
+            var err = "Customer with id " + id + " not found";
+            logger.error (err);
+            res.status(404).send();
         } else  {
+            logger.debug("sending customer with id " + id);
             res.status(200).send(customer);
         }
     });
@@ -45,10 +50,10 @@ exports.deleteCustomer = function (req, res) {
 
     Customer.findOneAndRemove({_id: id}, function (err) {
         if (err) {
-            console.error('error deleting the customer' + err);
+            logger.error('error deleting the customer' + err);
             res.status(500).send(err);
         } else {
-            console.log('customer deleted');
+            logger.debug('customer deleted');
             res.status(204).send();
         }
     });
@@ -60,10 +65,13 @@ exports.signup = function (req, res) {
 
     newCustomer.save(function (err, newCustomer) {
         if (err) {
-            console.error("error saving new customer to database: " + err);
+            logger.error("error saving new customer to database: " + err);
             res.status(422).send(err);
         } else {
-            publisher.publishCustomerEvent(newCustomer);
+            if(publish){
+                logger.debug("publishing customer: " + JSON.stringify(newCustomer));
+                publisher.publishCustomerEvent(newCustomer);
+            }
             res.json({"message": "your account has been created, please check your email for account verification"});
         }
     });
@@ -72,23 +80,23 @@ exports.signup = function (req, res) {
 exports.signin = function (req, res) {
 
     var username = req.body.username;
-    console.log('signing in with username:' + username);
+    logger.debug('signing in with username:' + username);
     Customer.findOne({email: username}, function (error, customer) {
         if (error) {
-            console.error("error looking up user: " + err);
+            logger.error("error looking up user: " + err);
             res.status(401).send();
         } else if (!customer) {
             var err = new Error('Customer not found');
-            console.log(err);
+            logger.log(err);
             res.status(401).send("username or password incorrect");
         } else {
             bcrypt.compare(req.body.password, customer.password, function (err, result) {
                 if (err) {
-                    console.error("err comparing passwords");
-                    res.status(500).send("internal servererror");
+                    logger.error("err comparing passwords");
+                    res.status(500).send("internal server error");
                 } else if (result === false) {
-                    console.error("password incorrect");
-                    res.status(403).send("username of password incorrect");
+                    logger.error("password incorrect");
+                    res.status(403).send("username or password incorrect");
                 }
                 if (result === true) {
                     var user = {
@@ -97,8 +105,11 @@ exports.signin = function (req, res) {
                         'lastName': customer.lastName,
                         '_id:': customer._id
                     };
-                    console.log('calling producer with user ' + JSON.stringify(user));
-                    publisher.publishSignInEvent(user);
+                    if(publish){
+                      logger.debug('calling producer with user ' + JSON.stringify(user));
+                      publisher.publishSignInEvent(user);
+                    }
+                    logger.debug('sending customer with id ' + customer._id);
                     res.status(200).send(customer);
                 }
             });
@@ -109,10 +120,17 @@ exports.signin = function (req, res) {
 exports.updateProfile = function (req, res) {
     Customer.findByIdAndUpdate(req.params._id, mapCustomerData(req.body), {new:true}, function (err, doc) {
         if (err) {
-            console.error("error updating customer profile:" + err);
+            logger.error("error updating customer profile:" + err);
             res.status(422).send(err);
-        } else {
-            publisher.publishCustomerEvent(doc);
+        } else if (!doc || !doc._id){
+            logger.error("customer with id " + req.params._id + " not found");
+            res.status(404).send();
+        }else{
+           if(publish){
+                logger.debug('calling producer with user: ' + JSON.stringify(doc));
+                publisher.publishCustomerEvent(doc);
+            }
+            logger.debug('updated customer: ' + doc);
             res.status(200).send(doc);
         }
     });
