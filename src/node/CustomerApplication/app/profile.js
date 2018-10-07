@@ -150,7 +150,8 @@ function mapCustomerData(body) {
     if (body.email) {
         customer.email = body.email;
     }
-    if (body.password) {
+    //it is not allowed to make the password empty
+    if (body.password && body.password.length > 0 ) {
         customer.password = body.password;
     }
     if (body.dateOfBirth) {

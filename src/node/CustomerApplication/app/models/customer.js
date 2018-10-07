@@ -59,29 +59,28 @@ CustomerSchema.pre('save', function (next) {
 });
 
 CustomerSchema.pre('findOneAndUpdate', async function () {
-    
-    
-    var passwordToHash = this.getUpdate().password;
-    var hashedPassword =  await bcrypt.hash(passwordToHash, SALTROUNDS);
-    
-    
-    logger.debug("hash in then: " + hashedPassword);
 
-    this.findOneAndUpdate({}, {password: hashedPassword});
-        
-                
-  });
-  
-//Make sure the password is not shown
-CustomerSchema.set('toJSON', {
-  getters: true,
-  transform: (doc, customer, options) => {
-    delete customer.password;
-    return customer;
-  }
+
+    var passwordToHash = this.getUpdate().password;
+    if (passwordToHash && passwordToHash.length > 0)  {
+        var hashedPassword = await bcrypt.hash(passwordToHash, SALTROUNDS)
+        logger.debug("hash in then: " + hashedPassword);
+        this.findOneAndUpdate({}, {password: hashedPassword});
+    }
+
+
 });
 
-  
+//Make sure the password is not shown
+CustomerSchema.set('toJSON', {
+    getters: true,
+    transform: (doc, customer, options) => {
+        delete customer.password;
+        return customer;
+    }
+});
+
+
 
 module.exports = mongoose.model('Customer', CustomerSchema);
 
