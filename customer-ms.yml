@@ -3,17 +3,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    run: customer-ms
+    app: customer-ms
   name: customer-ms
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: customer-ms
+      app: customer-ms
   template:
     metadata:
       labels:
-        run: customer-ms
+        app: customer-ms
     spec:
       containers:
       - args:
@@ -48,7 +48,7 @@ metadata:
   name: customer-ms
 spec:
   ports:
-  - port: 8080
+  - port: 8085
     protocol: TCP
     targetPort: 8080
   selector:
