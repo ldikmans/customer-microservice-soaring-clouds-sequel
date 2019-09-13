@@ -1,5 +1,4 @@
 # APP DEPLOYMENT
-
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -24,11 +23,13 @@ spec:
         - name: PORT
           value: "8080"
         - name: MONGO_HOST
-          value: cust-mongo-db
+          value: cust-mongo-soar
+        - name: MONGO_PORT
+          value: "27020"
         - name: KAFKA_BROKER
-          value: 129.150.77.116:6667
+          value: "18.184.145.38:9092"
         - name: KAFKA_REGISTRY
-          value: http://129.150.114.134:8081
+          value: "http://18.184.145.38:18081"
         image: lonneke/customer-ms:1.0.2
         name: customer-ms
         ports:
@@ -43,7 +44,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: customer-ms
+    app: customer-ms
   name: customer-ms
 spec:
   ports:
@@ -51,5 +52,5 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    run: customer-ms
-  type: NodePort
+    app: customer-ms
+  type: LoadBalancer
