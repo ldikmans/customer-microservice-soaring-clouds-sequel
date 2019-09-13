@@ -2,24 +2,23 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: cust-mongo-db
+  name: cust-mongo-soar
   labels:
-    run: cust-mongo-db
+    run: cust-mongo-soar
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        run: cust-mongo-db
+        run: cust-mongo-soar
     spec:
       containers:
-      #- image: localhost:27017/mongo:3.2.9
       - image: mongo:3.2.9
-        name: cust-mongo-db
+        name: cust-mongo-soar
         ports:
-        - name: cust-mongo-db
-          containerPort: 27017
-          hostPort: 27017
+        - name: cust-mongo-soar
+          containerPort: 27020
+          hostPort: 27020
       restartPolicy: Always
 
 ---
@@ -28,13 +27,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cust-mongo-db
+  name: cust-mongo-soar
   labels:
-    run: cust-mongo-db
+    run: cust-mongo-soar
 spec:
   clusterIP: None
   ports:
-  - port: 27017
-    targetPort: 27017
+  - port: 27020
+    targetPort: 27020
   selector:
-    run: cust-mongo-db
+    run: cust-mongo-soar
