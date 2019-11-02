@@ -18,7 +18,7 @@
     "main": "server.js",
     "dependencies": {
         "express": "~4.16.2",
-        "mongoose": "~5.0.7",
+        "mongoose": "~5.7.7",
         "bcrypt": "~3.0.1",
         "kafka-avro": "~0.8.1",
         "bunyan": "^1.8.12",
